@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: pyfieldimager
+Version: 0.9
+Summary: A tool for field image analysis
+Author: doi
+License: LGPL-2.1
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: gdal
+Requires-Dist: Pillow
