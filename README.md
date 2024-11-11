@@ -14,7 +14,7 @@ from PyPI
 pip install pyfieldimager
 ```
 
-from GitHub
+or, from GitHub
 
 ```
 git clone git@github.com:nudoi/pyfieldimager.git
