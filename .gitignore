@@ -3,6 +3,7 @@
 *.ipynb
 build/
 dist/
+venv/
 *.tif
 *.tif.aux.xml
 *.egg-info/
