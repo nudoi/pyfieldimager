@@ -2,5 +2,7 @@
 .ipynb_checkpoints/
 *.ipynb
 build/
+dist/
 *.tif
 *.tif.aux.xml
+*.egg-info/
