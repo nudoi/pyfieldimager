@@ -1,5 +1,7 @@
 # PyFieldImager
 
+![example workflow](https://github.com/github/docs/actions/workflows/python-publish.yml/badge.svg)
+
 ## A Python package for field image analysis
 
 This is a tool for analyzing orthomosaic images. You can extract useful information for agricultural analysis from images.
