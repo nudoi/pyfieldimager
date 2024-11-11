@@ -8,6 +8,12 @@ This is a tool for analyzing orthomosaic images. You can extract useful informat
 
 ## How to install
 
+from PyPI
+
+```
+pip install pyfieldimager
+```
+
 from GitHub
 
 ```
