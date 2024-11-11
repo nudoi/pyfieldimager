@@ -8,8 +8,8 @@ This is a tool for analyzing orthomosaic images. You can extract useful informat
 
 from GitHub
 
-'''
+```
 git clone git@github.com:nudoi/pyfieldimager.git
 cd pyfieldimager
 pip install .
-'''
+```
