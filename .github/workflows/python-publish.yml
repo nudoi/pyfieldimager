@@ -28,9 +28,11 @@ jobs:
         python-version: '3.x'
     - name: Install dependencies
       run: |
+        apt update
+        apt install -y python3-gdal
         python -m pip install --upgrade pip
         pip install numpy>1.0.0 wheel setuptools>=67
-        pip install gdal
+        pip install gdal[numpy]=="$(gdal-config --version).*"
         pip install matplotlib
         pip install build
     - name: Build package
