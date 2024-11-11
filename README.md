@@ -1,6 +1,6 @@
 # PyFieldImager
 
-![example workflow](https://github.com/github/docs/actions/workflows/python-publish.yml/badge.svg)
+![example workflow](https://github.com/nudoi/pyfieldimager/actions/workflows/python-publish.yml/badge.svg)
 
 ## A Python package for field image analysis
 
