@@ -32,10 +32,7 @@ jobs:
         pip install build
         pip install numpy
         pip install matplotlib
-        sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-        sudo apt-get update
-        sudo apt-get install gdal-bin libgdal-dev
-        pip install GDAL
+        conda install -c conda-forge gdal
     - name: Build package
       run: python -m build
     - name: Publish package
