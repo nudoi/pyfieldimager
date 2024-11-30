@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyfieldimager"
+version = "0.9.1"
+description = "A Python package for field image analysis."
+readme = "README.md"
+authors = [
+    {name = "doi", email = "doi@doilab.open.ad.jp"}
+]
+license = {file = "LICENSE"}
+keywords = ["field", "image", "python"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
+
+[project.scripts]
+pyfieldimager = "pyfieldimager.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/nudoi/pyfieldimager"
+Repository = "https://github.com/nudoi/pyfieldimager.git"
+Issues = "https://github.com/nudoi/pyfieldimager/issues"
