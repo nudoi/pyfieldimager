@@ -47,4 +47,4 @@ Note: GDAL is required. See [here](https://pypi.org/project/GDAL/) for installat
 
 ## License
 
-view [LICENsE](LICENSE).
+view [LICENSE](LICENSE).
