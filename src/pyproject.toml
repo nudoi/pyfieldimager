@@ -1,9 +1,10 @@
 [build-system]
 requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyfieldimager"
-version = "0.9"
+version = "0.9.1"
 description = "A Python package for field image analysis."
 readme = "README.md"
 authors = [
@@ -24,5 +25,10 @@ classifiers = [
     "Typing :: Typed",
 ]
 
+[project.scripts]
+pyfieldimager = "pyfieldimager.__main__:main"
 
-
+[project.urls]
+Homepage = "https://github.com/nudoi/pyfieldimager"
+Repository = "https://github.com/nudoi/pyfieldimager.git"
+Issues = "https://github.com/nudoi/pyfieldimager/issues"

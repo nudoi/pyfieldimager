@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from osgeo import gdal
 from ipywidgets import widgets, IntSlider, IntRangeSlider
-
 import warnings
 warnings.simplefilter('ignore', FutureWarning)
 
@@ -56,6 +55,7 @@ class FieldImage:
         self.chm = None
         self.gsd = gsd
         self._img = None
+        self._rgb = None
         self._dsm = self.dsm.copy() if self.dsm is not None else None
         self._rot = 0
         self._bbox = None
@@ -399,7 +399,7 @@ class FieldImage:
 
     def crop_field(self, rotation=0, x_range=[0, 0], y_range=[0, 0]):
         
-        if rotation < 360 or rotation > 360:
+        if rotation < 0 or rotation > 360:
             print('Rotation must be within 0 - 360')
         elif x_range[0] < 0 or x_range[1] > self.x_size:
             print('X range must be within 0 - ', self.x_size)
@@ -455,9 +455,29 @@ class FieldImage:
                 ax.text(bbox[0], bbox[1] + (i+0.5) * y_step, str(i), color='red')
 
         self._img = img.crop(bbox)
+        self._rgb = self._rgb[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+        self._dsm = self._dsm[bbox[1]:bbox[3], bbox[0]:bbox[2]] if self.dsm is not None else None
+        self.dtm = self.dtm[bbox[1]:bbox[3], bbox[0]:bbox[2]] if self.dtm is not None else None
         self._bbox = bbox
 
         plt.show()
+
+
+    def crop_grid(self, rotation=0, x_range=[0, 0], y_range=[0, 0], x_split=10, y_split=10, grid_num=False):
+            
+        if rotation < 0 or rotation > 360:
+            print('Rotation must be within 0 - 360')
+        elif x_range[0] < 0 or x_range[1] > self.x_size:
+            print('X range must be within 0 - ', self.x_size)
+        elif y_range[0] < 0 or y_range[1] > self.y_size:
+            print('Y range must be within 0 - ', self.y_size)
+        elif x_split < 2:
+            print('X split must be > 1')
+        elif y_split < 2:
+            print('Y split must be > 1')
+        else:
+            self.show_grid(rotation, x_range, y_range, x_split, y_split, grid_num)
+            self.update()
 
 
     def split(self, x_split=None, y_split=None):
@@ -482,6 +502,10 @@ class FieldImage:
                     nir = self.nir[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self.nir is not None else None
                     re = self.re[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self.re is not None else None
                     FI = FieldImage(rgb=rgb, dsm=dsm, dtm=dtm, nir=nir, re=re, gsd=self.gsd)
+                    _rgb = self._rgb[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self._rgb is not None else None
+                    FI._rgb = _rgb
+                    _dsm = self._dsm[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self._dsm is not None else None
+                    FI._dsm = _dsm
                     _.append(FI)
                 FIs.append(_)
 
@@ -588,15 +612,15 @@ class FieldImage:
 
     def select_dtm(self):
             
-            if self.dtm is not None:
-                min = widgets.FloatText(value=np.nanmin(self.dtm), description='Min: ')
-                max = widgets.FloatText(value=np.nanmax(self.dtm), description='Max: ')
-                cmap = widgets.Dropdown(options=['terrain', 'viridis', 'plasma', 'inferno', 'magma', 'cividis'], description='Colormap: ')
-                threshold = widgets.FloatSlider(value=np.nanmin(self.dtm), min=np.nanmin(self.dtm), max=np.nanmax(self.dtm), description='Threshold: ', orientation='horizontal', layout=widgets.Layout(width="auto"))
-                widgets.interact(self.show_dtm, min=min, max=max, cmap=cmap, threshold=threshold)
-    
-            else:
-                print('DTM not found')
+        if self.dtm is not None:
+            min = widgets.FloatText(value=np.nanmin(self.dtm), description='Min: ')
+            max = widgets.FloatText(value=np.nanmax(self.dtm), description='Max: ')
+            cmap = widgets.Dropdown(options=['terrain', 'viridis', 'plasma', 'inferno', 'magma', 'cividis'], description='Colormap: ')
+            threshold = widgets.FloatSlider(value=np.nanmin(self.dtm), min=np.nanmin(self.dtm), max=np.nanmax(self.dtm), description='Threshold: ', orientation='horizontal', layout=widgets.Layout(width="auto"))
+            widgets.interact(self.show_dtm, min=min, max=max, cmap=cmap, threshold=threshold)
+
+        else:
+            print('DTM not found')
 
 
     def show_dsm_hist(self):
@@ -619,13 +643,13 @@ class FieldImage:
             print('DTM not found')
 
 
-    def show_gradient(self, threshold=None, cmap='gray', min=None, max=None):
+    def show_dsm_grad(self, threshold=None, cmap='gray', min=None, max=None):
 
         if self.dsm is not None:
-            gradient = np.gradient(self.dsm)
+            grad = np.gradient(self.dsm)
             if threshold is not None:
-                gradient[0][gradient[0] < threshold] = np.nan
-            plt.imshow(gradient[0], cmap=cmap)
+                grad[0][grad[0] < threshold] = np.nan
+            plt.imshow(grad[0], cmap=cmap)
             plt.colorbar()
             if min is not None and max is not None:
                 plt.clim(min, max)
@@ -635,7 +659,7 @@ class FieldImage:
             print('DSM not found')
 
 
-    def select_gradient(self):
+    def select_dsm_grad(self):
                 
         if self.dsm is not None:
             threshold = widgets.FloatText(value=np.nanmin(np.gradient(self.dsm)[0]), description='Threshold: ')
@@ -664,7 +688,7 @@ class FieldImage:
             print('DTM not found')
 
 
-    def create_dtm(self, method='linear', order=1):
+    def create_dtm(self, axis=0, method='linear', order=1):
 
         if self.dsm is None:
             print('DSM not found')
@@ -675,8 +699,36 @@ class FieldImage:
         import pandas as pd
 
         df = pd.DataFrame(self.dsm)
-        df = df.interpolate(limit_direction='both', method=method, order=order)
+        df = df.interpolate(axis=axis, limit_direction='both', method=method, order=order)
         self.dtm = df.to_numpy()
+
+
+    def show_full(self):
+                
+        if self._rgb is not None:
+            plt.imshow(self._rgb)
+            plt.show()
+        else:
+            print('Image not found')
+
+
+    def show_dsm_full(self, min=None, max=None, cmap=None):
+                
+        if self._dsm is not None:
+            plt.imshow(self._dsm)
+            if cmap is not None:
+                plt.colorbar(cmap=cmap)
+            else:
+                plt.colorbar()
+            if min is not None and max is not None:
+                plt.clim(min, max)
+            elif min is not None:
+                plt.clim(min, np.nanmax(self._dsm))
+            elif max is not None:
+                plt.clim(np.nanmin(self._dsm), max)
+            plt.show()
+        else:
+            print('DSM not found')
 
 
     def create_chm(self, zerofill=False):
@@ -712,6 +764,91 @@ class FieldImage:
             plt.show()
         else:
             print('CHM not found')
+
+
+    def max_chm(self):
+            
+        if self.chm is not None:
+            return np.nanmax(self.chm)
+        else:
+            print('CHM not found')
+            return None
+        
+
+    def min_chm(self):
+                    
+        if self.chm is not None:
+            return np.nanmin(self.chm)
+        else:
+            print('CHM not found')
+            return None
+        
+
+    def mean_chm(self):
+                            
+        if self.chm is not None:
+            return np.nanmean(self.chm)
+        else:
+            print('CHM not found')
+            return None
+            
+
+    def median_chm(self):
+
+        if self.chm is not None:
+            return np.nanmedian(self.chm)
+        else:
+            print('CHM not found')
+            return None
+        
+            
+    def std_chm(self):
+                                    
+        if self.chm is not None:
+            return np.nanstd(self.chm)
+        else:
+            print('CHM not found')
+            return None
+
+
+    def proj_area(self):
+
+        if self.gsd is None:
+            print('GSD is not specified.')
+            gsd = 1
+        else:
+            gsd = self.gsd
+        
+        return np.count_nonzero(~np.isnan(self.chm)) * gsd ** 2
+    
+
+    def surf_area(self):
+
+        if self.gsd is None:
+            print('GSD is not specified.')
+            gsd = 1
+        else:
+            gsd = self.gsd
+
+        if self.chm is not None:
+            grad = np.gradient(self._dsm)
+            surf = np.sqrt(1 + grad[0]**2 + grad[1]**2)
+            surf = surf[~np.isnan(self.chm)]
+            return np.nansum(surf) * gsd ** 2
+        else:
+            print('CHM not found')
+            return None
+        
+
+    def square(self):
+
+        if self.gsd is None:
+            print('GSD is not specified.')
+            gsd = 1
+        else:
+            gsd = self.gsd
+
+        return self.shape[0] * self.shape[1] * gsd
 
 
     def clear_cache(self):
@@ -755,11 +892,14 @@ class FieldImage:
 
         if self._index is not None:
             rgb = self.rgb.copy()
+            self._rgb = self.rgb.copy()
+            self._dsm = self.dsm.copy() if self.dsm is not None else None
             for j in range(self.y_size):
                 for k in range(self.x_size):
                     if np.isnan(self._index[j, k]):
                         rgb[j, k] = [0, 0, 0, 0] if self.rgb.shape[2] == 4 else [0, 0, 0]
                         if self.dsm is not None:
+                            self._dsm[j, k] = self.dsm[j, k]
                             self.dsm[j, k] = np.nan
             self.img = Image.fromarray(rgb)
             self.rgb = np.array(self.img)
