@@ -45,6 +45,6 @@ pip install .
 
 Note: GDAL is required. See [here](https://pypi.org/project/GDAL/) for installation.
 
-## Licence
+## License
 
-view [LICENCE](LICENCE).
+view [LICENsE](LICENSE).

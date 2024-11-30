@@ -34,7 +34,7 @@ jobs:
         pip install matplotlib
         conda install -c conda-forge gdal
     - name: Build package
-      run: python -m build
+      run: cd src && python -m build
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
