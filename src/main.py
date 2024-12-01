@@ -6,7 +6,7 @@ from ipywidgets import widgets, IntSlider, IntRangeSlider
 import warnings
 warnings.simplefilter('ignore', FutureWarning)
 
-from .src.index import *
+from .index import *
 
 
 '''
