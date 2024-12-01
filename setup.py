@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyfieldimager',
-    version='0.9.2',
+    version='0.9.2.1',
     license='LGPLv2',
     description='A Python package for field image analysis.',
 
