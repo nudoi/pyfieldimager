@@ -1,6 +1,7 @@
 # PyFieldImager
 
 ![example workflow](https://github.com/nudoi/pyfieldimager/actions/workflows/python-publish.yml/badge.svg)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nudoi/pyfieldimager/blob/main/examples/example-1.ipynb)
 
 ## A Python package for field image analysis
 
@@ -21,6 +22,10 @@ This is a tool for analyzing orthomosaic images. You can extract useful informat
 - Calculate vegetation index.
 
 <img alt="field_index" src="examples/img/field_index.png" width="300px">
+
+- Split field by grid.
+
+<img alt="field_index" src="examples/img/crop_grid.png" width="300px">
 
 - Create DTM from Soil DSM, and CHM(=DSM-DTM).
 
