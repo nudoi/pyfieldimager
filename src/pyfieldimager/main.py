@@ -9,10 +9,11 @@ warnings.simplefilter('ignore', FutureWarning)
 from .index import *
 
 
-'''
-field image class
-'''
 class FieldImage:
+    """FieldImage class
+
+    This class manages field images such as orthophoto, dsm and dtm.
+    """
 
     def __init__(self, orthophoto=None, img=None, rgb=None, nir=None, re=None, dsm=None, dtm=None, gsd=None):
 
@@ -455,7 +456,7 @@ class FieldImage:
                 ax.text(bbox[0], bbox[1] + (i+0.5) * y_step, str(i), color='red')
 
         self._img = img.crop(bbox)
-        self._rgb = self._rgb[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+        #self._rgb = self._rgb[bbox[1]:bbox[3], bbox[0]:bbox[2]]
         self._dsm = self._dsm[bbox[1]:bbox[3], bbox[0]:bbox[2]] if self.dsm is not None else None
         self.dtm = self.dtm[bbox[1]:bbox[3], bbox[0]:bbox[2]] if self.dtm is not None else None
         self._bbox = bbox
@@ -478,6 +479,11 @@ class FieldImage:
         else:
             self.show_grid(rotation, x_range, y_range, x_split, y_split, grid_num)
             self.update()
+
+
+    def select_grid(self):
+            
+        widgets.interact(self.show_grid, rotation=IntSlider(min=0, max=360, step=1, value=0, description='Rotation',  layout=widgets.Layout(width="auto")), x_range=IntRangeSlider(value=[0.1*self.x_size, 0.9*self.x_size], min=0, max=self.x_size, step=1, description='X: ', orientation='horizontal', layout=widgets.Layout(width="auto")), y_range=IntRangeSlider(value=[0.1*self.y_size, 0.9*self.y_size], min=0, max=self.y_size, step=1, description='Y: ', orientation='horizontal', layout=widgets.Layout(width="auto")), x_split=widgets.IntText(step=1, value=10, description='X Grid: '), y_split=widgets.IntText(step=1, value=10, description='Y Grid: '), grid_num=widgets.Checkbox(value=True, description='Grid No.'))
 
 
     def split(self, x_split=None, y_split=None):
@@ -510,11 +516,6 @@ class FieldImage:
                 FIs.append(_)
 
         return FIs
-                
-
-    def select_grid(self):
-            
-            widgets.interact(self.show_grid, rotation=IntSlider(min=0, max=360, step=1, value=0, description='Rotation',  layout=widgets.Layout(width="auto")), x_range=IntRangeSlider(value=[0.1*self.x_size, 0.9*self.x_size], min=0, max=self.x_size, step=1, description='X: ', orientation='horizontal', layout=widgets.Layout(width="auto")), y_range=IntRangeSlider(value=[0.1*self.y_size, 0.9*self.y_size], min=0, max=self.y_size, step=1, description='Y: ', orientation='horizontal', layout=widgets.Layout(width="auto")), x_split=widgets.IntText(step=1, value=10, description='X Grid: '), y_split=widgets.IntText(step=1, value=10, description='Y Grid: '), grid_num=widgets.Checkbox(value=True, description='Grid No.'))
 
 
     def set_nir(self, nir):
