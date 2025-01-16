@@ -456,7 +456,7 @@ class FieldImage:
                 ax.text(bbox[0], bbox[1] + (i+0.5) * y_step, str(i), color='red')
 
         self._img = img.crop(bbox)
-        self._rgb = self._rgb[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+        self._rgb = self._rgb[bbox[1]:bbox[3], bbox[0]:bbox[2]] if self._rgb is not None else None
         self._dsm = self._dsm[bbox[1]:bbox[3], bbox[0]:bbox[2]] if self.dsm is not None else None
         self.dtm = self.dtm[bbox[1]:bbox[3], bbox[0]:bbox[2]] if self.dtm is not None else None
         self._bbox = bbox
