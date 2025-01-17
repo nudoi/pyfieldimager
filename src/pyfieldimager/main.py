@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from osgeo import gdal
-from ipywidgets import widgets, IntSlider, IntRangeSlider
+from ipywidgets import widgets
 import warnings
 warnings.simplefilter('ignore', FutureWarning)
 
@@ -211,7 +211,7 @@ class FieldImage:
 
     def select_hue(self):
 
-        widgets.interact(self.show_hue, range=IntRangeSlider(value=[0, 179], min=0, max=179, step=1, description='Hue: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
+        widgets.interact(self.show_hue, range=widgets.IntRangeSlider(value=[0, 179], min=0, max=179, step=1, description='Hue: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
 
 
     def show_saturation(self, range=[0, 255]):
@@ -244,7 +244,7 @@ class FieldImage:
 
     def select_saturation(self):
             
-        widgets.interact(self.show_saturation, range=IntRangeSlider(value=[0, 255], min=0, max=255, step=1, description='Saturation: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
+        widgets.interact(self.show_saturation, range=widgets.IntRangeSlider(value=[0, 255], min=0, max=255, step=1, description='Saturation: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
 
 
     def show_value(self, range=[0, 255]):
@@ -276,7 +276,7 @@ class FieldImage:
 
     def select_value(self):
 
-        widgets.interact(self.show_value, range=IntRangeSlider(value=[0, 255], min=0, max=255, step=1, description='Value: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
+        widgets.interact(self.show_value, range=widgets.IntRangeSlider(value=[0, 255], min=0, max=255, step=1, description='Value: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
 
 
     def show_brightness(self, range=[0, 255]):
@@ -395,7 +395,7 @@ class FieldImage:
 
     def select_field(self):
 
-        widgets.interact(self.show_field, rotation=IntSlider(min=0, max=360, step=1, value=0, description='Rotation',  layout=widgets.Layout(width="auto")), x_range=IntRangeSlider(value=[0.1*self.x_size, 0.9*self.x_size], min=0, max=self.x_size, step=1, description='X: ', orientation='horizontal', layout=widgets.Layout(width="auto")), y_range=IntRangeSlider(value=[0.1*self.y_size, 0.9*self.y_size], min=0, max=self.y_size, step=1, description='Y: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
+        widgets.interact(self.show_field, rotation=widgets.IntSlider(min=0, max=360, step=1, value=0, description='Rotation',  layout=widgets.Layout(width="auto")), x_range=widgets.IntRangeSlider(value=[0.1*self.x_size, 0.9*self.x_size], min=0, max=self.x_size, step=1, description='X: ', orientation='horizontal', layout=widgets.Layout(width="auto")), y_range=widgets.IntRangeSlider(value=[0.1*self.y_size, 0.9*self.y_size], min=0, max=self.y_size, step=1, description='Y: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
 
 
     def crop_field(self, rotation=0, x_range=[0, 0], y_range=[0, 0]):
@@ -483,7 +483,7 @@ class FieldImage:
 
     def select_grid(self):
             
-        widgets.interact(self.show_grid, rotation=IntSlider(min=0, max=360, step=1, value=0, description='Rotation',  layout=widgets.Layout(width="auto")), x_range=IntRangeSlider(value=[0.1*self.x_size, 0.9*self.x_size], min=0, max=self.x_size, step=1, description='X: ', orientation='horizontal', layout=widgets.Layout(width="auto")), y_range=IntRangeSlider(value=[0.1*self.y_size, 0.9*self.y_size], min=0, max=self.y_size, step=1, description='Y: ', orientation='horizontal', layout=widgets.Layout(width="auto")), x_split=widgets.IntText(step=1, value=10, description='X Grid: '), y_split=widgets.IntText(step=1, value=10, description='Y Grid: '), grid_num=widgets.Checkbox(value=True, description='Grid No.'))
+        widgets.interact(self.show_grid, rotation=widgets.IntSlider(min=0, max=360, step=1, value=0, description='Rotation',  layout=widgets.Layout(width="auto")), x_range=widgets.IntRangeSlider(value=[0.1*self.x_size, 0.9*self.x_size], min=0, max=self.x_size, step=1, description='X: ', orientation='horizontal', layout=widgets.Layout(width="auto")), y_range=widgets.IntRangeSlider(value=[0.1*self.y_size, 0.9*self.y_size], min=0, max=self.y_size, step=1, description='Y: ', orientation='horizontal', layout=widgets.Layout(width="auto")), x_split=widgets.IntText(step=1, value=10, description='X Grid: '), y_split=widgets.IntText(step=1, value=10, description='Y Grid: '), grid_num=widgets.Checkbox(value=True, description='Grid No.'))
 
 
     def split(self, x_split=None, y_split=None):
@@ -905,4 +905,3 @@ class FieldImage:
             self.img = Image.fromarray(rgb)
             self.rgb = np.array(self.img)
             self._index = None
-
