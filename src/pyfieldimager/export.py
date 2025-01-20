@@ -174,4 +174,31 @@ def _(images: list, dir_name: str):
         for j in range(len(images[i])):
             filename = dir_name + str(i) + "_" + str(j) + ".tif"
             export_chm(images[i][j], filename)
-            
+
+
+@singledispatch
+def export_csv(image: FieldImage, filename: str):
+
+    if filename[-4:] != ".csv":
+        filename += ".csv"
+    
+    if image.chm is not None:
+
+        try:
+            with open(filename, 'w') as f:
+                f.write("max, min, mean, median, std, proj, surf, square\n")
+                f.write(
+                    "{}, {}, {}, {}, {}, {}, {}, {}\n".format(
+                        image.max_chm(),
+                        image.min_chm(),
+                        image.mean_chm(),
+                        image.median_chm(),
+                        image.std_chm(),
+                        image.proj_area(),
+                        image.surf_area(),
+                        image.square()
+                    )
+                )
+        except:
+            raise ValueError("Failed to write csv file.")
+        
