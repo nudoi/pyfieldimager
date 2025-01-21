@@ -202,3 +202,40 @@ def export_csv(image: FieldImage, filename: str):
         except:
             raise ValueError("Failed to write csv file.")
         
+    else:
+        raise ValueError("No output.")
+        
+
+@export_csv.register
+def _(images: list, filename: str):
+
+    if filename[-4:] != ".csv":
+        filename += ".csv"
+
+    if images[0][0].chm is not None:
+
+        try:
+            with open(filename, 'w') as f:
+                f.write("col, row, max, min, mean, median, std, proj, surf, square\n")
+                for i in range(len(images)):
+                    for j in range(len(images[i])):
+                        f.write(
+                            "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(
+                                i,
+                                j,
+                                images[i][j].max_chm(),
+                                images[i][j].min_chm(),
+                                images[i][j].mean_chm(),
+                                images[i][j].median_chm(),
+                                images[i][j].std_chm(),
+                                images[i][j].proj_area(),
+                                images[i][j].surf_area(),
+                                images[i][j].square()
+                            )
+                        )
+        except:
+            raise ValueError("Failed to write csv file.")
+        
+    else:
+        raise ValueError("No output.")
+        
