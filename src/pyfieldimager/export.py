@@ -186,9 +186,9 @@ def export_csv(image: FieldImage, filename: str):
 
         try:
             with open(filename, 'w') as f:
-                f.write("max, min, mean, median, std, proj, surf, square\n")
+                f.write("max, min, mean, median, std, proj, surf, square, gsd\n")
                 f.write(
-                    "{}, {}, {}, {}, {}, {}, {}, {}\n".format(
+                    "{}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(
                         image.max_chm(),
                         image.min_chm(),
                         image.mean_chm(),
@@ -196,7 +196,8 @@ def export_csv(image: FieldImage, filename: str):
                         image.std_chm(),
                         image.proj_area(),
                         image.surf_area(),
-                        image.square()
+                        image.square(),
+                        image.gsd if image.gsd is not None else "None"
                     )
                 )
         except:
@@ -216,11 +217,11 @@ def _(images: list, filename: str):
 
         try:
             with open(filename, 'w') as f:
-                f.write("col, row, max, min, mean, median, std, proj, surf, square\n")
+                f.write("col, row, max, min, mean, median, std, proj, surf, square, gsd\n")
                 for i in range(len(images)):
                     for j in range(len(images[i])):
                         f.write(
-                            "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(
+                            "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(
                                 i,
                                 j,
                                 images[i][j].max_chm(),
@@ -230,7 +231,8 @@ def _(images: list, filename: str):
                                 images[i][j].std_chm(),
                                 images[i][j].proj_area(),
                                 images[i][j].surf_area(),
-                                images[i][j].square()
+                                images[i][j].square(),
+                                images[i][j].gsd if images[i][j].gsd is not None else "None"
                             )
                         )
         except:

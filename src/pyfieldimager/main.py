@@ -15,7 +15,7 @@ class FieldImage:
     This class manages field images such as orthophoto, dsm and dtm.
     """
 
-    def __init__(self, orthophoto=None, img=None, rgb=None, nir=None, re=None, dsm=None, dtm=None, gsd=None):
+    def __init__(self, orthophoto=None, img=None, rgb=None, nir=None, re=None, dsm=None, dtm=None, chm=None, gsd=None):
 
         if orthophoto is None and img is None and rgb is None:
             print('Image not found')
@@ -53,7 +53,7 @@ class FieldImage:
             self.dtm = None
         if self.dtm is not None:
             self.dtm[self.dtm == -9999] = np.nan
-        self.chm = None
+        self.chm = chm
         self.gsd = gsd
         self._img = None
         self._rgb = None
@@ -80,6 +80,16 @@ class FieldImage:
                 if min is not None and max is not None:
                     plt.clim(min, max)
                 plt.show()
+
+
+    def show_index(self, index=None, threshold=None, cmap=None):
+
+        if index is None:
+            self.select_index()
+
+        else:
+            self.calc_index(index, threshold)
+            self.show(index, threshold, cmap)
 
 
     def select_index(self):
@@ -505,9 +515,10 @@ class FieldImage:
                     rgb = np.array(img)
                     dsm = self.dsm[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self.dsm is not None else None
                     dtm = self.dtm[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self.dtm is not None else None
+                    chm = self.chm[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self.chm is not None else None
                     nir = self.nir[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self.nir is not None else None
                     re = self.re[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self.re is not None else None
-                    FI = FieldImage(rgb=rgb, dsm=dsm, dtm=dtm, nir=nir, re=re, gsd=self.gsd)
+                    FI = FieldImage(rgb=rgb, dsm=dsm, dtm=dtm, chm=chm, nir=nir, re=re, gsd=self.gsd)
                     _rgb = self._rgb[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self._rgb is not None else None
                     FI._rgb = _rgb
                     _dsm = self._dsm[j * y_step:(j+1) * y_step, i * x_step:(i+1) * x_step] if self._dsm is not None else None
@@ -863,6 +874,7 @@ class FieldImage:
     def update(self):
         
         if self._img is not None:
+
             self.orthophoto = None
             self.img = self._img
             self.rgb = np.array(self._img)
@@ -878,20 +890,31 @@ class FieldImage:
                     self._rot = 0 if self.dtm is not None else self._rot
                 if self._bbox is not None:
                     self.dsm = self.dsm[self._bbox[1]:self._bbox[3], self._bbox[0]:self._bbox[2]]
-                    self._bbox = None if self.dtm is not None else self._bbox
+                    # self._bbox = None if self.dtm is not None else self._bbox
             if self.dtm is not None:
                 if self._rot != 0:
                     dtm = Image.fromarray(self.dtm)
                     dtm = dtm.rotate(self._rot, expand=False)
                     self.dtm = np.array(dtm)
                     self.dtm[self.dtm == 0] = np.nan
-                    self._rot = 0
+                    self._rot = 0 if self.chm is not None else self._rot
                 if self._bbox is not None:
                     self.dtm = self.dtm[self._bbox[1]:self._bbox[3], self._bbox[0]:self._bbox[2]]
+                    # self._bbox = None
+            if self.chm is not None:
+                if self._rot != 0:
+                    chm = Image.fromarray(self.chm)
+                    chm = chm.rotate(self._rot, expand=False)
+                    self.chm = np.array(chm)
+                    self.chm[self.chm == 0] = np.nan
+                    self._rot = 0
+                if self._bbox is not None:
+                    self.chm = self.chm[self._bbox[1]:self._bbox[3], self._bbox[0]:self._bbox[2]]
                     self._bbox = None
             self._img = None
 
         if self._index is not None:
+
             rgb = self.rgb.copy()
             self._rgb = self.rgb.copy()
             self._dsm = self.dsm.copy() if self.dsm is not None else None

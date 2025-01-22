@@ -12,7 +12,7 @@ This is a tool for analyzing orthomosaic images. You can extract useful informat
 
 - This package manages field images (such as orthophoto, Digital Surface Model (DSM) and Digital Terrain Model (DTM)) as field image object.
 - This package can identify vegetation and soil extent using vegetation indices (e.g. NDVI, VARI, SCI).
-- It can also calculate the height distribution (known as Canopy Height Model (CHM)) and projected/surface area of vegetation areas, and can create DTMs by missing value completion.
+- It can also calculate the height distribution (known as Canopy Height Model (CHM)) and projected/surface area of vegetation areas, save to CSV, and can create DTMs by missing value completion.
 
 ## For Example
 

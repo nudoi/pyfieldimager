@@ -4,6 +4,7 @@ Untitled-*.ipynb
 build/
 dist/
 venv/
+*.csv
 *.tif
 *.tif.aux.xml
 *.egg-info/
