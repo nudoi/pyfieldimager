@@ -82,25 +82,29 @@ class FieldImage:
                 plt.show()
 
 
-    def show_index(self, index=None, threshold=None, cmap=None):
+    def show_index(self, index=None, threshold=None, reverse=False, cmap=None):
 
         if index is None:
             self.select_index()
 
         else:
-            self.calc_index(index, threshold)
-            self.show(index, threshold, cmap)
+            i, min, max = self.calc_index(index, threshold, reverse)
+            if i is not None:
+                plt.imshow(i)
+                plt.colorbar()
+                if cmap is not None:
+                    plt.set_cmap(cmap)
+                if min is not None and max is not None:
+                    plt.clim(min, max)
+                plt.show()
 
 
     def select_index(self):
 
-        index = widgets.Dropdown(options=FieldIndex.list(), description='Index: ')
-        threshold = widgets.FloatText(value=0, description='Threshold: ')
-        cmap = widgets.Dropdown(options=['viridis', 'plasma', 'inferno', 'magma', 'cividis'], description='Colormap: ')
-        widgets.interact(self.show, index=index, threshold=threshold, cmap=cmap)
+        widgets.interact(self.show_index, index=widgets.Dropdown(options=FieldIndex.list(), description='Index: '), threshold=widgets.FloatText(value=0, description='Threshold: '), reverse=widgets.Checkbox(value=False, description='< Threshold'), cmap=widgets.Dropdown(options=['viridis', 'plasma', 'inferno', 'magma', 'cividis'], description='Colormap: '))
 
 
-    def calc_index(self, index=None, threshold=None):
+    def calc_index(self, index=None, threshold=None, reverse=False):
             
         r = self.rgb[:,:,0].astype(float)
         g = self.rgb[:,:,1].astype(float)
@@ -184,7 +188,10 @@ class FieldImage:
         i[(self.rgb[:,:,0] == 0) & (self.rgb[:,:,1] == 0) & (self.rgb[:,:,2] == 0) & (self.rgb[:,:,3] == 0)] = np.nan
         
         if threshold is not None:
-            i[i < threshold] = np.nan
+            if reverse:
+                i[i >= threshold] = np.nan
+            else:
+                i[i < threshold] = np.nan
 
         self._index = i
 
@@ -890,7 +897,7 @@ class FieldImage:
                     self._rot = 0 if self.dtm is not None else self._rot
                 if self._bbox is not None:
                     self.dsm = self.dsm[self._bbox[1]:self._bbox[3], self._bbox[0]:self._bbox[2]]
-                    # self._bbox = None if self.dtm is not None else self._bbox
+
             if self.dtm is not None:
                 if self._rot != 0:
                     dtm = Image.fromarray(self.dtm)
@@ -900,7 +907,7 @@ class FieldImage:
                     self._rot = 0 if self.chm is not None else self._rot
                 if self._bbox is not None:
                     self.dtm = self.dtm[self._bbox[1]:self._bbox[3], self._bbox[0]:self._bbox[2]]
-                    # self._bbox = None
+
             if self.chm is not None:
                 if self._rot != 0:
                     chm = Image.fromarray(self.chm)
