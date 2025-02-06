@@ -32,6 +32,10 @@ This is a tool for analyzing orthomosaic images. You can extract useful informat
 
 <img alt="field_index" src="examples/img/create_chm.png" width="500px">
 
+- Plant Canopy Height
+
+<img alt="field_index" src="examples/img/plant_chm.png" width="300px">
+
 ## How to install
 
 from PyPI

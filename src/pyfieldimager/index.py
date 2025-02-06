@@ -6,12 +6,13 @@ class BandIndex(Enum):
     Red = 1
     Green = 2
     Blue = 3
-    Gray = 4
+    ALPHA = 4
 
     R = 1
     G = 2
     B = 3
-
+    A = 4
+    
     NIR = 5
     SWIR = 6
     FIR = 7

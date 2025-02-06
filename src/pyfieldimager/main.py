@@ -838,7 +838,13 @@ class FieldImage:
         else:
             gsd = self.gsd
         
-        return np.count_nonzero(~np.isnan(self.chm)) * gsd ** 2
+        if self.chm is not None:
+            return np.count_nonzero(~np.isnan(self.chm)) * gsd ** 2
+        elif self.dsm is not None:
+            return np.count_nonzero(~np.isnan(self.dsm)) * gsd ** 2
+        else:
+            print('CHM and DSM not found')
+            return None
     
 
     def surf_area(self):
@@ -854,8 +860,13 @@ class FieldImage:
             surf = np.sqrt(1 + grad[0]**2 + grad[1]**2)
             surf = surf[~np.isnan(self.chm)]
             return np.nansum(surf) * gsd ** 2
+        elif self.dsm is not None:
+            grad = np.gradient(self._dsm)
+            surf = np.sqrt(1 + grad[0]**2 + grad[1]**2)
+            surf = surf[~np.isnan(self.dsm)]
+            return np.nansum(surf) * gsd ** 2
         else:
-            print('CHM not found')
+            print('CHM and DSM not found')
             return None
         
 
@@ -867,7 +878,7 @@ class FieldImage:
         else:
             gsd = self.gsd
 
-        return self.shape[0] * self.shape[1] * gsd
+        return self.shape[0] * self.shape[1] * gsd ** 2
 
 
     def clear_cache(self):

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyfieldimager"
-version = "0.9.3"
+version = "0.9.3.1"
 description = "A Python package for field image analysis."
 readme = "README.md"
 authors = [

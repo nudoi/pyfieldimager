@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 import os
 from osgeo import gdal
@@ -202,6 +201,22 @@ def export_csv(image: FieldImage, filename: str):
                 )
         except:
             raise ValueError("Failed to write csv file.")
+
+    elif image.dsm is not None:
+
+        try:
+            with open(filename, 'w') as f:
+                f.write("proj, surf, square, gsd\n")
+                f.write(
+                    "{}, {}, {}, {}\n".format(
+                        image.proj_area(),
+                        image.surf_area(),
+                        image.square(),
+                        image.gsd if image.gsd is not None else "None"
+                    )
+                )
+        except:
+            raise ValueError("Failed to write csv file.")
         
     else:
         raise ValueError("No output.")
@@ -229,6 +244,26 @@ def _(images: list, filename: str):
                                 images[i][j].mean_chm(),
                                 images[i][j].median_chm(),
                                 images[i][j].std_chm(),
+                                images[i][j].proj_area(),
+                                images[i][j].surf_area(),
+                                images[i][j].square(),
+                                images[i][j].gsd if images[i][j].gsd is not None else "None"
+                            )
+                        )
+        except:
+            raise ValueError("Failed to write csv file.")
+        
+    elif images[0][0].dsm is not None:
+        
+        try:
+            with open(filename, 'w') as f:
+                f.write("col, row, proj, surf, square, gsd\n")
+                for i in range(len(images)):
+                    for j in range(len(images[i])):
+                        f.write(
+                            "{}, {}, {}, {}, {}, {}\n".format(
+                                i,
+                                j,
                                 images[i][j].proj_area(),
                                 images[i][j].surf_area(),
                                 images[i][j].square(),
