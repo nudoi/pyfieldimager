@@ -615,6 +615,25 @@ class FieldImage:
         else:
             print('DTM not found')
 
+    
+    def calc_dsm(self, min=None, max=None, cmap=None, threshold=None):
+
+        if self.dsm is not None:
+            dsm = self.dsm.copy()
+            if threshold is not None:
+                dsm[self.dsm < threshold] = np.nan
+                self._index = dsm
+            plt.imshow(dsm)
+            plt.colorbar()
+            if cmap is not None:
+                plt.set_cmap(cmap)
+            if min is not None and max is not None:
+                plt.clim(min, max)
+            plt.show()
+
+        else:
+            print('DSM not found')
+
 
     def select_dsm(self):
 
@@ -623,7 +642,7 @@ class FieldImage:
             max = widgets.FloatText(value=np.nanmax(self.dsm), description='Max: ')
             cmap = widgets.Dropdown(options=['terrain', 'viridis', 'plasma', 'inferno', 'magma', 'cividis'], description='Colormap: ')
             threshold = widgets.FloatSlider(value=np.nanmin(self.dsm), min=np.nanmin(self.dsm), max=np.nanmax(self.dsm), description='Threshold: ', orientation='horizontal', layout=widgets.Layout(width="auto"))
-            widgets.interact(self.show_dsm, min=min, max=max, cmap=cmap, threshold=threshold)
+            widgets.interact(self.calc_dsm, min=min, max=max, cmap=cmap, threshold=threshold)
 
         else:
             print('DSM not found')
