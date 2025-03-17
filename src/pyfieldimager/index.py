@@ -29,6 +29,26 @@ class BandIndex(Enum):
         return cls[name].value
     
 
+class HSVIndex(Enum):
+
+    Hue = 1
+    Saturation = 2
+    Value = Brightness = 3
+
+    H = 1
+    S = 2
+    V = 3
+
+    @classmethod
+    def list(cls):
+        return list(map(lambda c: c.name, cls))
+    
+
+    @classmethod
+    def get(cls, name):
+        return cls[name].value
+    
+
 '''
 vegetation indecies
 

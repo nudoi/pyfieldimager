@@ -210,6 +210,8 @@ class FieldImage:
         hue[hue < min] = np.nan
         hue[hue > max] = np.nan
 
+        self._index = hue
+
         plt.imshow(hue, cmap='hsv')
         plt.colorbar()
         plt.clim(min, max)
@@ -231,6 +233,50 @@ class FieldImage:
         widgets.interact(self.show_hue, range=widgets.IntRangeSlider(value=[0, 179], min=0, max=179, step=1, description='Hue: ', orientation='horizontal', layout=widgets.Layout(width="auto")))
 
 
+    def otsu(self, band="Hue"):
+
+        if HSVIndex.get(band) == 1: # Hue
+            self.img = Image.fromarray(self.rgb)
+            hsv = self.img.convert('HSV')
+            data = np.array(hsv)[:,:,0].astype(float)
+            bins = 180
+        elif HSVIndex.get(band) == 2: # Saturation
+            self.img = Image.fromarray(self.rgb)
+            hsv = self.img.convert('HSV')
+            data = np.array(hsv)[:,:,1].astype(float)
+            bins = 256
+        elif HSVIndex.get(band) == 3: # Value
+            self.img = Image.fromarray(self.rgb)
+            hsv = self.img.convert('HSV')
+            data = np.array(hsv)[:,:,2].astype(float)
+            bins = 256
+        else:
+            print('Band not found')
+            return
+
+        hist, bin_edges = np.histogram(data, bins=bins)
+        total = data.size
+        current_max, threshold = 0, 0
+        sum_total = np.dot(hist, bin_edges[:-1])
+        sumB, wB = 0.0, 0.0
+
+        for i in range(bins):
+            wB += hist[i]
+            if wB == 0:
+                continue
+            wF = total - wB
+            if wF == 0:
+                break
+            sumB += bin_edges[i] * hist[i]
+            mB = sumB / wB
+            mF = (sum_total - sumB) / wF
+            between_var = wB * wF * (mB - mF) ** 2
+            if between_var > current_max:
+                current_max = between_var
+                threshold = bin_edges[i]
+        return threshold
+
+
     def show_saturation(self, range=[0, 255]):
             
         min, max = range
@@ -242,6 +288,8 @@ class FieldImage:
 
         sat[sat < min] = np.nan
         sat[sat > max] = np.nan
+
+        self._index = sat
 
         plt.imshow(sat, cmap='gray')
         plt.colorbar()
@@ -275,6 +323,8 @@ class FieldImage:
 
         val[val < min] = np.nan
         val[val > max] = np.nan
+
+        self._index = val
 
         plt.imshow(val, cmap='gray')
         plt.colorbar()

@@ -57,4 +57,4 @@ Note: GDAL is required. See [here](https://pypi.org/project/GDAL/) for installat
 
 ## License
 
-view [LICENSE](https://raw.githubusercontent.com/nudoi/pyfieldimager/refs/heads/main/LICENSE).
+view [LICENSE](https://github.com/nudoi/pyfieldimager/blob/main/LICENSE).
