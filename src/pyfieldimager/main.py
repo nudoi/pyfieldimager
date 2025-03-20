@@ -235,17 +235,17 @@ class FieldImage:
 
     def otsu(self, band="Hue"):
 
-        if HSVIndex.get(band) == 1: # Hue
+        if HSVIndex.get(band) == -1: # Hue
             self.img = Image.fromarray(self.rgb)
             hsv = self.img.convert('HSV')
             data = np.array(hsv)[:,:,0].astype(float)
             bins = 180
-        elif HSVIndex.get(band) == 2: # Saturation
+        elif HSVIndex.get(band) == -2: # Saturation
             self.img = Image.fromarray(self.rgb)
             hsv = self.img.convert('HSV')
             data = np.array(hsv)[:,:,1].astype(float)
             bins = 256
-        elif HSVIndex.get(band) == 3: # Value
+        elif HSVIndex.get(band) == -3: # Value
             self.img = Image.fromarray(self.rgb)
             hsv = self.img.convert('HSV')
             data = np.array(hsv)[:,:,2].astype(float)

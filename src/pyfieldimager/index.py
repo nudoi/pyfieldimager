@@ -31,13 +31,13 @@ class BandIndex(Enum):
 
 class HSVIndex(Enum):
 
-    Hue = 1
-    Saturation = 2
-    Value = Brightness = 3
+    Hue = -1
+    Saturation = -2
+    Value = Brightness = -3
 
-    H = 1
-    S = 2
-    V = 3
+    H = -1
+    S = -2
+    V = -3
 
     @classmethod
     def list(cls):
