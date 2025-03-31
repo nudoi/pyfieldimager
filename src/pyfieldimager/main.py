@@ -586,6 +586,40 @@ class FieldImage:
         return FIs
 
 
+    def delete_noise(self, neighbourhood=8, threshold=10):
+
+        from scipy.ndimage import label
+
+        mask = ~np.isnan(self.chm)
+
+        if neighbourhood == 8:
+            structure = np.ones((3, 3), dtype=int)
+        elif neighbourhood == 4:
+            structure = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]], dtype=int)
+        else:
+            print('Neighbourhood must be 4 or 8')
+            return
+
+        labeled_array, num_features = label(mask, structure=structure)
+
+        for label_id in range(1, num_features + 1):
+            cluster_mask = labeled_array == label_id
+            area = np.sum(cluster_mask)
+
+            if area <= threshold:
+                self.chm[cluster_mask] = np.nan
+
+        plt.imshow(self.chm)
+        plt.colorbar()
+        plt.show()
+
+
+    def select_noise(self):
+        neighbourhood = widgets.Dropdown(options=[4, 8], description='Neighbourhood: ')
+        threshold = widgets.IntText(value=0, description='Threshold: ')
+        widgets.interact(self.delete_noise, neighbourhood=neighbourhood, threshold=threshold)
+
+
     def set_nir(self, nir):
                 
         self.nir = nir.ReadAsArray()
