@@ -2,7 +2,7 @@
 
 ![example workflow](https://github.com/nudoi/pyfieldimager/actions/workflows/python-publish.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/pyfieldimager.svg)](https://badge.fury.io/py/pyfieldimager)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nudoi/pyfieldimager/blob/main/examples/example-1.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nudoi/ipynb/blob/main/examples/example-1.ipynb)
 
 ## A Python package for field image analysis
 
